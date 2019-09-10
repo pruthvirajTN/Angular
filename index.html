@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
+
+  <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
+  <script src="https://cdn.firebase.com/libs/angularfire/1.0.0/angularfire.min.js"></script>
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+
+
+</head>
+<style>
+       body
+		{
+
+  background: #67b11c  ;
+  color: #fff;
+        }
+    </style>
+
+<body>
+<div class="container">
+
+  <!--THE VIEW.-->
+  <div ng-app="myApp"
+
+
+
+       ng-controller="myController">
+
+
+
+
+
+    <!-- LOOP.-->
+
+    <table  border=1 >
+      <tr>
+        <td><b>ID</b></td>
+        <td><b>JobTitle</b></td>
+        <td><b>Project</b></td>
+        <td><b>ProjectDescription</b></td>
+        <td><b>Email</b></td>
+        <td><b>RequestedManager</b></td>
+        <td><b>RequestedDate</b></td>
+        <td><b>Skills</b></td>
+        <td><b>ExpLevel</b></td>
+
+      </tr>
+      <tr ng-repeat="emp in employees|  filter:searchText" >
+        <td>{{ emp.ID }}
+        </td>
+        <td>{{ emp.JobTitle }}
+        </td>
+        <td> {{emp.Project}}
+        </td>
+        <td>{{ emp.ProjectDescription }}
+        </td>
+        <td>{{ emp.Email }}
+        </td>
+        <td>{{ emp.RequestedManager }}
+        </td>
+        <td>{{ emp.Date |date}}
+        </td>
+        <td>{{ emp.Skills }}
+        </td>
+        <td>{{ emp.ExpLevel}}
+        </td>
+
+
+      </tr> <script>
+	var myApp = angular.module('myApp', ["firebase"]);
+
+    myApp.controller('myController', ['$scope','$firebaseArray', function ($scope,$firebaseArray) {
+		var ref = new Firebase("https://myproject-ca36c.firebaseio.com/myproject/employeedetails");
+		$scope.employees=$firebaseArray(ref);
+		$scope.counterIncrement=1
+		$scope.add = function () {
+
+
+			if($scope.counterIncrement!=0){
+				// ADD A NEW ELEMENT.
+				debugger;
+				$scope.employees.$add({ ID:$scope.counterIncrement,JobTitle: $scope.JobTitle, Project: $scope.Project,ProjectDescription: $scope.ProjectDescription,Email:$scope.Email, RequestedManager: $scope.RequestedManager,Date: $scope.mydate.toLocaleDateString(),Skills: $scope.skills,ExpLevel: $scope.ExpLevel});
+				$scope.counterIncrement++;
+			}
+			debugger;
+
+			// CLEAR THE FIELDS.
+			$scope.JobTitle = '';
+			$scope.Project = '';
+
+			$scope.ProjectDescription='';
+			$scope.Email='';
+			$scope.RequestedManager='';
+			$scope.mydate='';
+			$scope.skills='';
+			$scope.ExpLevel='';
+		}
+
+		$scope.reset=function(){
+			$scope.JobTitle = '';
+			$scope.Project = '';
+
+			$scope.ProjectDescription='';
+			$scope.Email='';
+			$scope.RequestedManager='';
+			$scope.mydate='';
+			$scope.skills='';
+			$scope.ExpLevel='';
+		}
+		$scope.reset();
+
+
+
+
+
+	}
+
+]);
+
+
+
+
+	</script>
+
+    </table>
+
+
+    <form class="well">
+      <h1>RequestForm</h1>
+      <label>JobTitle</label><br>
+      <input type="text" ng-model="JobTitle"><br>
+      <label>Project: </label> <br>
+      <input type="text" ng-model="Project"><br>
+      <label>ProjectDescription:</label><br>
+      <input type="text" ng-model="ProjectDescription"><br>
+      <label>Email:</label><br>
+      <input type="text" ng-model="Email"><br>
+      <label>RequestedManager:</label><br>
+      <input type="text" ng-model="RequestedManager"><br>
+      <label>Date:</label><br>
+      <input type="date" ng-model="mydate"><br>
+      <label>Skills</label><br>
+      <input type="text" ng-model="skills"><br>
+      <label>ExpLevel:</label><br>
+      <select ng-model="ExpLevel"><br>
+        <option value="">select ExpLevel</option>
+        <option value="SrManager">Sr.Manager</option>
+        <option value="JrManager">Jr.Manager</option>
+        <option value="TeamLead">TeamLead</option>
+      </select><br><br>
+      <button class="btn btn-primary " type="button" ng-click="add()">SUBMIT</button>
+
+      <button class="btn btn-primary " type="button" ng-click="reset()">CANCEL</button><br><br>
+      <label>Search: <input ng-model="searchText"></label>
+    </form>
+
+
+  </div>
+
+
+</div>
+
+
+  <app-root></app-root>
+</body>
+</html>
